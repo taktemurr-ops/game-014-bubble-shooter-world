@@ -30,6 +30,11 @@ class _BubbleBoardState extends State<BubbleBoard> {
   int next = 0;
   int score = 0;
   int moves = 0;
+  int bestScore = 0;
+  bool get won => cells.every((row) => row.every((cell) => cell == null));
+  bool get lost => cells.last.any((cell) => cell != null);
+  bool get finished => won || lost;
+
   _BubbleBoardState() { resetData(); }
 
   void resetData() {
@@ -45,7 +50,7 @@ class _BubbleBoardState extends State<BubbleBoard> {
   ].where((p) => p.$1 >= 0 && p.$1 < rows && p.$2 >= 0 && p.$2 < cols).toList();
 
   void shoot(int r, int c) {
-    if (cells[r][c] != null) return;
+    if (finished || cells[r][c] != null) return;
     if (r != 0 && !neighbors(r,c).any((p) => cells[p.$1][p.$2] != null)) return;
     setState(() {
       cells[r][c] = next;
@@ -79,6 +84,7 @@ class _BubbleBoardState extends State<BubbleBoard> {
           }
         }
       }
+      if (score > bestScore) bestScore = score;
       next = random.nextInt(colors.length);
     });
   }
@@ -90,6 +96,10 @@ class _BubbleBoardState extends State<BubbleBoard> {
       Padding(padding: const EdgeInsets.all(12), child:
         Text('Score: $score   Shots: $moves   Next:', style: const TextStyle(fontSize:18))),
       Container(width:34,height:34, decoration:BoxDecoration(color:colors[next],shape:BoxShape.circle)),
+      Text('Best score: $bestScore'),
+      if (finished) Text(won ? 'Level cleared!' : 'Game over!',
+        key: const ValueKey('bubble-result')),
+
       const SizedBox(height:20),
       Expanded(child: LayoutBuilder(builder:(context,limits) {
         final diameter = min((limits.maxWidth - 20) / (cols + 0.5),
@@ -106,7 +116,7 @@ class _BubbleBoardState extends State<BubbleBoard> {
                     color: cells[r][c] == null ? Colors.white10 : colors[cells[r][c]!],
                     shape:BoxShape.circle)))))))));
       })),
-      const Text('Prototype: tap an empty slot attached to bubbles.'),
+      const Text('Tap an empty slot attached to bubbles. Match three to pop.'),
       Padding(padding:const EdgeInsets.all(12),child:
         FilledButton(onPressed:()=>setState(resetData),child:const Text('New Game'))),
     ])),
