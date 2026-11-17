@@ -50,6 +50,7 @@ class _BubbleBoardState extends State<BubbleBoard> {
   ].where((p) => p.$1 >= 0 && p.$1 < rows && p.$2 >= 0 && p.$2 < cols).toList();
 
   void shoot(int r, int c) {
+    if (r < 0 || r >= rows || c < 0 || c >= cols) return;
     if (finished || cells[r][c] != null) return;
     if (r != 0 && !neighbors(r,c).any((p) => cells[p.$1][p.$2] != null)) return;
     setState(() {
@@ -85,7 +86,13 @@ class _BubbleBoardState extends State<BubbleBoard> {
         }
       }
       if (score > bestScore) bestScore = score;
-      next = random.nextInt(colors.length);
+      // Only offer colors still on the board, avoiding impossible shots.
+      final available = <int>{
+        for (final row in cells)
+          for (final bubble in row)
+            if (bubble != null) bubble,
+      }.toList()..sort();
+      next = available.isEmpty ? 0 : available[random.nextInt(available.length)];
     });
   }
 
