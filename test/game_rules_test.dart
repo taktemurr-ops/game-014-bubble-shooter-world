@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game_014_bubble_shooter_world/core/level_plan.dart';
+import 'package:studio_core/core/level_plan.dart';
 import 'package:game_014_bubble_shooter_world/game/bubble_engine.dart';
 import 'package:game_014_bubble_shooter_world/game/rules.dart';
 
