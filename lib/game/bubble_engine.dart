@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
-import '../core/arcade.dart';
-import '../core/level_plan.dart';
-import '../core/rng.dart';
+import 'package:studio_core/core/arcade.dart';
+import 'package:studio_core/core/level_plan.dart';
+import 'package:studio_core/core/rng.dart';
 
 /// Cell values: -1 empty, 0..5 colors, 7 stone (never pops, can drop).
 /// Shot kinds: 0..5 colors, 8 bomb, 9 rainbow.
